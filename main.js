@@ -83,7 +83,7 @@ function reset(){
     inputHistory.textContent = `입력한 숫자들: ${history}`
     playButton.disabled = false
     gameOver = false
-    resultArea.textContent = "결과값이 여기 나옵니다"
+    resultArea.textContent = "다시 시작!"
     showAnswer.textContent = ""
 }
 

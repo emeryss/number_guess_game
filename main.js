@@ -12,8 +12,19 @@ let computerNum = 0;
 let playButton = document.getElementById("play-button");
 let userInput = document.getElementById("user-input");
 let resultArea = document.getElementById("result-area");
+let resetButton = document.getElementById("reset-button")
+let chances = 5
+let gameOver = false
+let chanceArea = document.getElementById("chance-area")
+let history = []
+let inputHistory = document.getElementById("input-history")
+let showAnswer = document.getElementById("show_answer")
 
 playButton.addEventListener("click", play)
+resetButton.addEventListener("click", reset)
+userInput.addEventListener("focus",function(){
+    userInput.value=""
+})
 
 function pickRandomNum(){
     computerNum = Math.floor(Math.random()*100)+1;
@@ -22,13 +33,58 @@ function pickRandomNum(){
 
 function play(){
     let userValue = userInput.value
+
+    if(userValue<1 || userValue>100){
+        showAnswer.textContent="1과 100 사이 숫자를 입력해주세요"
+        return
+    }
+
+    if(history.includes(userValue)){
+        showAnswer.textContent = "이미 입력한 숫자입니다. 다른 숫자를 입력해 주세요"
+        return
+    }
+    chances --;
+    history.push(userValue)
+    console.log(history)
+    inputHistory.textContent = `입력한 숫자들: ${history}`
+    chanceArea.textContent= `남은 찬스: ${chances}번`
+    console.log("chance", chances)
+
     if (userValue < computerNum){
         resultArea.textContent = "Up!!!"
     } else if (userValue > computerNum) {
         resultArea.textContent = "Down!!!"
     } else {
         resultArea.textContent = "맞췄습니다!!!"
+        gameOver=true
+        showAnswer.textContent=`짝짝짝!!!`
     }
+
+
+
+    if (chances <1){
+        gameOver=true
+        if(userValue!=computerNum){showAnswer.textContent=`정답은 ${computerNum}이었습니다!`}
+    }
+
+    if (gameOver == true){
+        playButton.disabled = true
+    }
+}
+
+function reset(){
+    // user input 창이 깨끗하게 정리되고
+    userInput.value = ""
+    // 새로운 번호가 생성되고
+    pickRandomNum();
+    chances = 5
+    chanceArea.textContent= `남은찬스: ${chances}번`
+    history=[]
+    inputHistory.textContent = `입력한 숫자들: ${history}`
+    playButton.disabled = false
+    gameOver = false
+    resultArea.textContent = "결과값이 여기 나옵니다"
+    showAnswer.textContent = ""
 }
 
 pickRandomNum()
